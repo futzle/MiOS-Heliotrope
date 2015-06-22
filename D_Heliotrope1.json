@@ -1,0 +1,460 @@
+{
+	"flashicon": "default.png",
+	"imgIconBody": "",
+	"imgIconDimmable": "",
+	"imgIconTurnable": "",
+	"imgIconMin": "",
+	"imgIconMax": "",
+	"halloIconsDir": "pics\/hallo",
+	"inScene": "0",
+	"DisplayStatus": {
+		"Service": "urn:futzle-com:serviceId:AstronomicalPosition_Sun",
+		"Variable": "Altitude",
+		"MinValue": "-90",
+		"MaxValue": "90"
+	},
+	"doc_url": {
+		"doc_language": 1,
+		"doc_manual": 1,
+		"doc_version": 1,
+		"doc_platform": 0,
+		"doc_page": "devices"
+	},
+	"Tabs": [
+		{
+			"Label": {
+				"lang_tag": "tabname_control",
+				"text": "Control"
+			},
+			"Position": "0",
+			"TabType": "flash",
+			"SceneGroup": [
+				{
+					"id": "1",
+					"top": "1",
+					"left": "0",
+					"x": "2",
+					"y": "2"
+				}
+			],
+			"ControlGroup": [
+				{
+					"id": "1",
+					"type": "info",
+					"scenegroup": "1"
+				},
+				{
+					"id": "2",
+					"type": "info",
+					"scenegroup": "1"
+				}
+			],
+			"Control": [
+				{
+					"ControlGroup": "1",
+					"ControlPair": "1",
+					"ControlHeader": "1",
+					"ControlType": "label",
+					"Label": {
+						"lang_tag": "azimuth",
+						"text": "Azimuth:"
+					},
+					"top": 0,
+					"left": 0,
+					"Display": {
+						"Top": 60,
+						"Left": 20,
+						"Width": 100,
+						"Height": 20
+					}
+				},
+				{
+					"ControlGroup": "1",
+					"ControlPair": "1",
+					"ControlHeader": "1",
+					"ControlType": "variable",
+					"top": 0,
+					"left": 0.8,
+					"Display": {
+						"Service": "urn:futzle-com:serviceId:AstronomicalPosition_Sun",
+						"Variable": "AzimuthRounded",
+						"Top": 60,
+						"Left": 160,
+						"Width": 100,
+						"Height": 20
+					}
+				},
+				{
+					"ControlGroup": "2",
+					"ControlPair": "1",
+					"ControlHeader": "1",
+					"ControlType": "label",
+					"Label": {
+						"lang_tag": "altitude",
+						"text": "Altitude:"
+					},
+					"top": 1,
+					"left": 0,
+					"Display": {
+						"Top": 90,
+						"Left": 20,
+						"Width": 100,
+						"Height": 20
+					}
+				},
+				{
+					"ControlGroup": "2",
+					"ControlPair": "1",
+					"ControlHeader": "1",
+					"ControlType": "variable",
+					"top": 1,
+					"left": 0.8,
+					"Display": {
+						"Service": "urn:futzle-com:serviceId:AstronomicalPosition_Sun",
+						"Variable": "AltitudeRounded",
+						"Top": 90,
+						"Left": 160,
+						"Width": 100,
+						"Height": 20
+					}
+				},
+				{
+					"ControlGroup": "3",
+					"ControlPair": "1",
+					"ControlHeader": "1",
+					"ControlType": "label",
+					"Label": {
+						"lang_tag": "rightascension",
+						"text": "Right Ascension:"
+					},
+					"Display": {
+						"Top": 120,
+						"Left": 20,
+						"Width": 100,
+						"Height": 20
+					}
+				},
+				{
+					"ControlGroup": "3",
+					"ControlPair": "1",
+					"ControlHeader": "1",
+					"ControlType": "variable",
+					"Display": {
+						"Service": "urn:futzle-com:serviceId:AstronomicalPosition_Sun",
+						"Variable": "RightAscensionRounded",
+						"Top": 120,
+						"Left": 160,
+						"Width": 100,
+						"Height": 20
+					}
+				},
+				{
+					"ControlGroup": "3",
+					"ControlPair": "1",
+					"ControlHeader": "1",
+					"ControlType": "label",
+					"Label": {
+						"lang_tag": "declination",
+						"text": "Declination:"
+					},
+					"Display": {
+						"Top": 150,
+						"Left": 20,
+						"Width": 100,
+						"Height": 20
+					}
+				},
+				{
+					"ControlGroup": "3",
+					"ControlPair": "1",
+					"ControlHeader": "1",
+					"ControlType": "variable",
+					"Display": {
+						"Service": "urn:futzle-com:serviceId:AstronomicalPosition_Sun",
+						"Variable": "DeclinationRounded",
+						"Top": 150,
+						"Left": 160,
+						"Width": 100,
+						"Height": 20
+					}
+				}
+			]
+		},
+		{
+			"Label": {
+				"lang_tag": "advanced",
+				"text": "Advanced"
+			},
+			"Position": "1",
+			"TabType": "javascript",
+			"ScriptName": "shared.js",
+			"Function": "advanced_device"
+		}, 
+		{
+			"Label": {
+				"lang_tag": "logs",
+				"text": "Logs"
+			},
+			"Position": "2",
+			"TabType": "javascript",
+			"ScriptName": "shared.js",
+			"Function": "device_logs"
+		},
+		{
+			"Label": {
+				"lang_tag": "notifications",
+				"text": "Notifications"
+			},
+			"Position": "3",
+			"TabType": "javascript",
+			"ScriptName": "shared.js",
+			"Function": "device_notifications"
+		}
+	],
+	"eventList": {
+		"event_1": {
+			"label": "Sun goes above altitude",
+			"serviceId": "urn:futzle-com:serviceId:AstronomicalPosition_Sun",
+			"norepeat": "1",
+			"argumentList" : {
+				"argument_1" : {
+					"dataType": "i4",
+					"name": "Altitude",
+					"comparisson": ">",
+					"prefix": "Degrees: ",
+					"suffix": ""
+				}
+			}
+		},
+		"event_2": {
+			"label": "Sun goes below altitude",
+			"serviceId": "urn:futzle-com:serviceId:AstronomicalPosition_Sun",
+			"norepeat": "1",
+			"argumentList" : {
+				"argument_1" : {
+					"dataType": "i4",
+					"name": "Altitude",
+					"comparisson": "<",
+					"prefix": "Degrees: ",
+					"suffix": ""
+				}
+			}
+		},
+		"event_3": {
+			"label": "Sun azimuth [-180,180) decreases past",
+			"serviceId": "urn:futzle-com:serviceId:AstronomicalPosition_Sun",
+			"norepeat": "1",
+			"argumentList" : {
+				"argument_1" : {
+					"dataType": "i4",
+					"name": "Azimuth",
+					"comparisson": "<",
+					"prefix": "Degrees: ",
+					"suffix": ""
+				}
+			}
+		},
+		"event_4": {
+			"label": "Sun azimuth [0,360) decreases past",
+			"serviceId": "urn:futzle-com:serviceId:AstronomicalPosition_Sun",
+			"norepeat": "1",
+			"argumentList" : {
+				"argument_1" : {
+					"dataType": "i4",
+					"name": "Azimuth360",
+					"comparisson": "<",
+					"prefix": "Degrees: ",
+					"suffix": ""
+				}
+			}
+		},
+		"event_5": {
+			"label": "Sun azimuth [-180,180) increases past",
+			"serviceId": "urn:futzle-com:serviceId:AstronomicalPosition_Sun",
+			"norepeat": "1",
+			"argumentList" : {
+				"argument_1" : {
+					"dataType": "i4",
+					"name": "Azimuth",
+					"comparisson": ">",
+					"prefix": "Degrees: ",
+					"suffix": ""
+				}
+			}
+		},
+		"event_6": {
+			"label": "Sun azimuth [0,360) increases past",
+			"serviceId": "urn:futzle-com:serviceId:AstronomicalPosition_Sun",
+			"norepeat": "1",
+			"argumentList" : {
+				"argument_1" : {
+					"dataType": "i4",
+					"name": "Azimuth360",
+					"comparisson": ">",
+					"prefix": "Degrees: ",
+					"suffix": ""
+				}
+			}
+		}
+
+	},
+	"eventList2": [
+		{
+			"id": 1,
+			"label": {
+				"lang_tag": "sun_goes_above_altitude",
+				"text": "Sun goes above altitude"
+			},
+			"serviceId": "urn:futzle-com:serviceId:AstronomicalPosition_Sun",
+			"norepeat": "1",
+			"argumentList" : [
+				{
+					"id": 1,
+					"dataType": "i4",
+					"name": "Altitude",
+					"comparisson": ">",
+					"prefix": {
+						"lang_tag": "degrees",
+						"text": "Degrees:"
+					},
+					"suffix": {},
+					"HumanFriendlyText": {
+						"lang_tag": "hft_sun_goes_above",
+						"text": "_DEVICE_NAME_: Sun goes above _ARGUMENT_VALUE_ degrees"
+					}
+				}
+			]
+		},
+		{
+			"id": 2,
+			"label": {
+				"lang_tag": "sun_goes_below_altitude",
+				"text": "Sun goes below altitude"
+			},
+			"serviceId": "urn:futzle-com:serviceId:AstronomicalPosition_Sun",
+			"norepeat": "1",
+			"argumentList" : [
+				{
+					"id": 1,
+					"dataType": "i4",
+					"name": "Altitude",
+					"comparisson": "<",
+					"prefix": {
+						"lang_tag": "degrees",
+						"text": "Degrees:"
+					},
+					"suffix": {},
+					"HumanFriendlyText": {
+						"lang_tag": "hft_sun_goes_below",
+						"text": "_DEVICE_NAME_: Sun goes below _ARGUMENT_VALUE_ degrees"
+					}
+				}
+			]
+		},
+		{
+			"id": 3,
+			"label": {
+				"lang_tag": "sun_passes_azimuth_180180",
+				"text": "Sun azimuth [-180,180) decreases past"
+			},
+			"serviceId": "urn:futzle-com:serviceId:AstronomicalPosition_Sun",
+			"norepeat": "1",
+			"argumentList" : [
+				{
+					"id": 1,
+					"dataType": "i4",
+					"name": "Azimuth",
+					"comparisson": "<",
+					"prefix": {
+						"lang_tag": "degrees",
+						"text": "Degrees:"
+					},
+					"suffix": {},
+					"HumanFriendlyText": {
+						"lang_tag": "hft_sun_passes_azimuth",
+						"text": "_DEVICE_NAME_: Sun azimuth decreases past _ARGUMENT_VALUE_ degrees"
+					}
+				}
+			]
+		},
+		{
+			"id": 4,
+			"label": {
+				"lang_tag": "sun_passes_azimuth_0360",
+				"text": "Sun azimuth [0,360) decreases past"
+			},
+			"serviceId": "urn:futzle-com:serviceId:AstronomicalPosition_Sun",
+			"norepeat": "1",
+			"argumentList" : [
+				{
+					"id": 1,
+					"dataType": "i4",
+					"name": "Azimuth360",
+					"comparisson": "<",
+					"prefix": {
+						"lang_tag": "degrees",
+						"text": "Degrees:"
+					},
+					"suffix": {},
+					"HumanFriendlyText": {
+						"lang_tag": "hft_sun_passes_azimuth",
+						"text": "_DEVICE_NAME_: Sun azimuth decreases past _ARGUMENT_VALUE_ degrees"
+					}
+				}
+			]
+		},
+		{
+			"id": 5,
+			"label": {
+				"lang_tag": "sun_passes_azimuth_180180",
+				"text": "Sun azimuth [-180,180) increases past"
+			},
+			"serviceId": "urn:futzle-com:serviceId:AstronomicalPosition_Sun",
+			"norepeat": "1",
+			"argumentList" : [
+				{
+					"id": 1,
+					"dataType": "i4",
+					"name": "Azimuth",
+					"comparisson": ">",
+					"prefix": {
+						"lang_tag": "degrees",
+						"text": "Degrees:"
+					},
+					"suffix": {},
+					"HumanFriendlyText": {
+						"lang_tag": "hft_sun_passes_azimuth",
+						"text": "_DEVICE_NAME_: Sun azimuth increases past _ARGUMENT_VALUE_ degrees"
+					}
+				}
+			]
+		},
+		{
+			"id": 6,
+			"label": {
+				"lang_tag": "sun_passes_azimuth_0360",
+				"text": "Sun azimuth [0,360) increases past"
+			},
+			"serviceId": "urn:futzle-com:serviceId:AstronomicalPosition_Sun",
+			"norepeat": "1",
+			"argumentList" : [
+				{
+					"id": 1,
+					"dataType": "i4",
+					"name": "Azimuth360",
+					"comparisson": ">",
+					"prefix": {
+						"lang_tag": "degrees",
+						"text": "Degrees:"
+					},
+					"suffix": {},
+					"HumanFriendlyText": {
+						"lang_tag": "hft_sun_passes_azimuth",
+						"text": "_DEVICE_NAME_: Sun azimuth increases past _ARGUMENT_VALUE_ degrees"
+					}
+				}
+			]
+		}
+	],
+	"DeviceType": "urn:schemas-futzle-com:device:Heliotrope:1"
+}

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns="urn:schemas-upnp-org:device-1-0">
+	<specVersion>
+		<major>1</major>
+		<minor>0</minor>
+	</specVersion>
+	<device>
+		<deviceType>urn:schemas-futzle-com:device:Heliotrope:1</deviceType>
+		<staticJson>D_Heliotrope1.json</staticJson>
+		<serviceList>
+			<service>
+				<serviceType>urn:schemas-futzle-com:service:AstronomicalPosition:1</serviceType>
+				<serviceId>urn:futzle-com:serviceId:AstronomicalPosition_Sun</serviceId>
+				<SCPDURL>S_AstronomicalPosition1.xml</SCPDURL>
+			</service>
+		</serviceList>
+		<implementationList>
+			<implementationFile>I_Heliotrope1.xml</implementationFile>
+		</implementationList>
+	</device>
+</root>
+

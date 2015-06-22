@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<scpd xmlns="urn:schemas-upnp-org:service-1-0">
+<specVersion>
+  <major>1</major>
+  <minor>0</minor>
+</specVersion>
+<serviceStateTable>
+
+  <stateVariable>
+    <name>RightAscension</name>
+    <sendEventsAttribute>yes</sendEventsAttribute>
+    <dataType>i4</dataType>
+    <defaultValue></defaultValue>
+    <shortCode>ra</shortCode>
+  </stateVariable>
+
+  <stateVariable>
+    <name>RightAscension360</name>
+    <sendEventsAttribute>yes</sendEventsAttribute>
+    <dataType>i4</dataType>
+    <defaultValue></defaultValue>
+    <shortCode>ra</shortCode>
+  </stateVariable>
+
+  <stateVariable>
+    <name>Declination</name>
+    <sendEventsAttribute>yes</sendEventsAttribute>
+    <dataType>i4</dataType>
+    <defaultValue></defaultValue>
+    <shortCode>dec</shortCode>
+  </stateVariable>
+
+  <stateVariable>
+    <name>Azimuth</name>
+    <sendEventsAttribute>yes</sendEventsAttribute>
+    <dataType>i4</dataType>
+    <defaultValue></defaultValue>
+    <shortCode>az</shortCode>
+  </stateVariable>
+
+  <stateVariable>
+    <name>Azimuth360</name>
+    <sendEventsAttribute>yes</sendEventsAttribute>
+    <dataType>i4</dataType>
+    <defaultValue></defaultValue>
+    <shortCode>az</shortCode>
+  </stateVariable>
+
+  <stateVariable>
+    <name>Altitude</name>
+    <sendEventsAttribute>yes</sendEventsAttribute>
+    <dataType>i4</dataType>
+    <defaultValue></defaultValue>
+    <shortCode>alt</shortCode>
+  </stateVariable>
+
+</serviceStateTable>
+</scpd>

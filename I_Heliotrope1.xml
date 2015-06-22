@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<implementation>
+	<functions>
+
+local locationServiceId = "urn:futzle-com:serviceId:Geolocation1"
+local sunServiceId = "urn:futzle-com:serviceId:AstronomicalPosition_Sun"
+
+local latitude = luup.latitude
+local longitude = luup.longitude
+
+local deviceId
+
+function initialize(lul_device)
+	luup.log("I_Heliotrope start")
+
+  local customLatitude=luup.variable_get(locationServiceId, "Latitude", lul_device)
+  local customLongitude=luup.variable_get(locationServiceId, "Longitude", lul_device)
+  if (customLatitude and customLongitude) then
+    latitude = tonumber(customLatitude)
+    longitude = tonumber(customLongitude)
+  end
+
+	deviceId = lul_device
+
+	luup.call_timer("periodic", 1, "1", "", "1")
+	return true
+end
+
+-- Return altitude correction for altitude due to atmospheric refraction.
+-- http://en.wikipedia.org/wiki/Atmospheric_refraction
+function correctForRefraction(d)
+	if (not (d > -0.5)) then d = -0.5 end	-- Function goes ballistic when negative.
+	return (0.017/math.tan(math.rad(d + 10.3/(d+5.11))))
+end
+
+-- Return the right ascension of the sun at Unix epoch t.
+-- http://bodmas.org/kepler/sun.html
+function sunAbsolutePositionDeg(t)
+	local dSec = t - 946728000
+	local meanLongitudeDeg = (280.461 + 0.9856474 * dSec/86400.0) % 360.0
+	local meanAnomalyDeg = (357.528 + 0.9856003 * dSec/86400.0) % 360.0
+	local eclipticLongitudeDeg = meanLongitudeDeg + 1.915 * math.sin(math.rad(meanAnomalyDeg)) + 0.020 * math.sin(2*math.rad(meanAnomalyDeg))
+	local eclipticObliquityDeg = 23.439 - 0.0000004 * dSec/86400.0
+	local sunAbsY = math.cos(math.rad(eclipticObliquityDeg)) * math.sin(math.rad(eclipticLongitudeDeg))
+	local sunAbsX = math.cos(math.rad(eclipticLongitudeDeg))
+	local rightAscensionRad = math.atan2(sunAbsY, sunAbsX)
+	local declinationRad = math.asin(math.sin(math.rad(eclipticObliquityDeg))*math.sin(math.rad(eclipticLongitudeDeg)))
+	return math.deg(rightAscensionRad), math.deg(declinationRad)
+end
+
+-- Convert an object's RA/Dec to altazimuth coordinates.
+-- http://bodmas.org/kepler/sun.html
+-- http://answers.yahoo.com/question/index?qid=20070830185150AAoNT4i
+-- http://www.jgiesen.de/astro/astroJS/siderealClock/
+function absoluteToRelativeDeg(t, rightAscensionDeg, declinationDeg)
+	local dSec = t - 946728000
+	local midnightUtc = dSec - (dSec % 86400)
+	local siderialUtcHours = (18.697374558 + 0.06570982441908*midnightUtc/86400.0 + 1.00273790935*(dSec%86400)/3600) % 24.0
+	local siderialLocalDeg = (siderialUtcHours * 15 + longitude) % 360.0
+	local hourAngleDeg = (siderialLocalDeg - rightAscensionDeg) % 360.0
+	local altitudeRad = math.asin(math.sin(math.rad(declinationDeg))*math.sin(math.rad(latitude)) + math.cos(math.rad(declinationDeg)) * math.cos(math.rad(latitude)) * math.cos(math.rad(hourAngleDeg)))
+	local azimuthY = -math.cos(math.rad(declinationDeg)) * math.cos(math.rad(latitude)) * math.sin(math.rad(hourAngleDeg))
+	local azimuthX = math.sin(math.rad(declinationDeg)) - math.sin(math.rad(latitude)) * math.sin(altitudeRad)
+	local azimuthRad = math.atan2(azimuthY, azimuthX)
+	return math.deg(azimuthRad), math.deg(altitudeRad)
+end
+
+
+function periodic(first)
+	local startup = (first == "1")
+
+	local t = os.time()
+
+	local ra, dec = sunAbsolutePositionDeg(t)
+
+	local ra360 = ra
+	if (0 > ra360) then ra360 = ra360 + 360.0 end
+	luup.variable_set(sunServiceId, "RightAscension", string.format("%f", ra), deviceId, startup)
+	luup.variable_set(sunServiceId, "RightAscension360", string.format("%f", ra360), deviceId, startup)
+	local raRounded
+	if (luup.variable_get(sunServiceId, "RightAscensionDisplay", deviceId) or "0" == "1") then
+		raRounded = string.format("%.1f", ra360)
+	else
+		raRounded = string.format("%.1f", ra)
+	end
+	luup.variable_set(sunServiceId, "RightAscensionRounded", raRounded, deviceId)
+	luup.variable_set(sunServiceId, "Declination", string.format("%f", dec), deviceId, startup)
+	local decRounded = string.format("%.1f", dec)
+	luup.variable_set(sunServiceId, "DeclinationRounded", decRounded)
+
+	local az, alt = absoluteToRelativeDeg(t, ra, dec)
+	alt = alt + correctForRefraction(alt)
+
+	local az360 = az
+	if (0 > az360) then az360 = az360 + 360.0 end
+	luup.variable_set(sunServiceId, "Azimuth", string.format("%f", az), deviceId, startup)
+	luup.variable_set(sunServiceId, "Azimuth360", string.format("%f", az360), deviceId, startup)
+	local azRounded
+	if (luup.variable_get(sunServiceId, "AzimuthDisplay", deviceId) or "0" == "1") then
+		azRounded = string.format("%.1f", az360)
+	else
+		azRounded = string.format("%.1f", az)
+	end
+	luup.variable_set(sunServiceId, "AzimuthRounded", azRounded, deviceId)
+	luup.variable_set(sunServiceId, "Altitude", string.format("%f", alt), deviceId, startup)
+	local altRounded = string.format("%.1f", alt)
+	luup.variable_set(sunServiceId, "AltitudeRounded", altRounded, deviceId)
+
+	luup.call_timer("periodic", 1, "15", "", "")
+end
+
+	</functions>
+
+	<incoming>
+		<lua>
+		</lua>
+	</incoming>
+
+	<startup>initialize</startup>
+
+</implementation>
+
